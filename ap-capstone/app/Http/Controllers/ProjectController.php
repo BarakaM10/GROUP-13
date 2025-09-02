@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    // Other methods (index, show, create, store, destroy) handled by Person C, not included here.
-    // Only edit/update methods included for Week 2 task.
 
     public function edit(Project $project)
     {
