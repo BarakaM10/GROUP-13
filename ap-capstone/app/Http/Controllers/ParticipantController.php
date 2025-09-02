@@ -63,4 +63,3 @@ public function destroy(Participant $participant)
         return redirect()->route('participants.index')->with('success', 'Participant deleted.');
     }
 };
-<?php
