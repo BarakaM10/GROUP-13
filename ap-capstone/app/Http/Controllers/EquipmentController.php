@@ -3,39 +3,83 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
-use App\Http\Requests\EquipmentRequest;
+use App\Models\Facility;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
 {
-    use ApiResponse;
-    public function index(Request $r)
+    public function index(Request $request)
     {
-        $q = Equipment::query()->with('facility');
-        if ($r->filled('facility_id'))
-            $q->where('facility_id', $r->integer('facility_id'));
-        if ($r->filled('capability'))
-            $q->whereJsonContains('capabilities', $r->string('capability'));
-        if ($r->filled('usage_domain'))
-            $q->where('usage_domain', $r->string('usage_domain'));
-        return $this->ok($q->latest('id')->paginate());
+        $facilityId = $request->query('facility_id');
+        $capability = $request->query('capability');
+        $domain = $request->query('domain');
+
+        $equipment = Equipment::when($facilityId, fn($q, $f) => $q->where('FacilityId', $f))
+            ->when($capability, fn($q, $c) => $q->where('Capabilities', 'like', "%{$c}%"))
+            ->when($domain, fn($q, $d) => $q->where('UsageDomain', 'like', "%{$d}%"))
+            ->with('facility')
+            ->paginate(10);
+
+        return view('equipment.index', compact('equipment'));
     }
+
     public function show(Equipment $equipment)
     {
-        return $this->ok($equipment->load('facility'));
+        return view('equipment.show', compact('equipment'));
     }
-    public function store(EquipmentRequest $req)
+
+    public function create()
     {
-        return $this->created(Equipment::create($req->validated()));
+       $facilities = Facility::all();
+        return view('equipment.create', compact('facilities'));
     }
-    public function update(EquipmentRequest $req, Equipment $equipment)
+
+    public function store(Request $request)
     {
-        $equipment->update($req->validated());
-        return $this->ok($equipment);
+        $validated = $request->validate([
+            'FacilityId' => 'required|exists:facilities,FacilityId',
+            'Name' => 'required|string|max:255',
+            'Capabilities' => 'nullable|string',
+            'Description' => 'nullable|text',
+            'InventoryCode' => 'nullable|string',
+            'UsageDomain' => 'nullable|string',
+            'SupportPhase' => 'nullable|string',
+        ]);
+        Equipment::create($validated);
+        return redirect()->route('equipment.index')->with('success', 'Equipment created.');
     }
+
+    public function edit(Equipment $equipment)
+    {
+        $facilities = Facility::all();
+        return view('equipment.edit', compact('equipment', 'facilities'));
+    }
+
+    public function update(Request $request, Equipment $equipment)
+    {
+        $validated = $request->validate([
+            'FacilityId' => 'required|exists:facilities,FacilityId',
+            'Name' => 'required|string|max:255',
+            'Capabilities' => 'nullable|string',
+            'Description' => 'nullable|text',
+            'InventoryCode' => 'nullable|string',
+            'UsageDomain' => 'nullable|string',
+           'SupportPhase' => 'nullable|string',
+        ]);
+        $equipment->update($validated);
+        return redirect()->route('equipment.index')->with('success', 'Equipment updated.');
+    }
+
     public function destroy(Equipment $equipment)
     {
+        // Check if equipment is tied to active projects (Week 2 task)
+        $projects = Project::where('FacilityId', $equipment->FacilityId)->exists();
+        if ($projects) {
+            return back()->with('error', 'Cannot delete equipment tied to active projects.');
+        }
         $equipment->delete();
-        return $this->ok(['deleted' => true]);
+        return redirect()->route('equipment.index')->with('success', 'Equipment deleted.');
     }
-}
+};
+
