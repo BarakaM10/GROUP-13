@@ -68,6 +68,5 @@ class OutcomeController extends Controller
         return redirect()->route('outcomes.index')->with('success', 'Outcome deleted.');
     }
 };
-<?php
 
 
