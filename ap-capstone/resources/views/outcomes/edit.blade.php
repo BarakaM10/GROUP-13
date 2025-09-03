@@ -5,6 +5,8 @@
 @section('content')
     <h1>Edit Outcome</h1>
     <form action="{{ route('outcomes.update', $outcome) }}" method="POST">
+
+    <form action="{{ route('outcomes.update', $outcome) }}" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
         <div class="mb-3">
             <label>Project</label>
@@ -25,6 +27,14 @@
             <textarea name="Description" class="form-control">{{ $outcome->Description }}</textarea>
         </div>
         <div class="mb-3">
+
+            <label>Artifact File</label>
+            <input type="file" name="ArtifactLink" class="form-control">
+            @if($outcome->ArtifactLink)
+                <p>Current: {{ $outcome->ArtifactLink }}</p>
+            @endif
+        </div>
+        <div class="mb-3">
             <label>Outcome Type</label>
             <input type="text" name="OutcomeType" class="form-control" value="{{ $outcome->OutcomeType }}">
         </div>
@@ -38,4 +48,5 @@
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
+@endsection
 @endsection

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,8 @@ class Outcome extends Model
     protected $fillable = [
         'ProjectId', 'Title', 'Description', 'OutcomeType',
         'QualityCertification', 'CommercializationStatus'
+        'ProjectId', 'Title', 'Description', 'ArtifactLink',
+        'OutcomeType', 'QualityCertification', 'CommercializationStatus'
     ];
 
     public function project()

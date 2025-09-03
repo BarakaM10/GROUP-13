@@ -42,6 +42,10 @@
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
+                        @if($outcome->ArtifactLink)
+                            <a href="{{ route('outcomes.view', $outcome) }}" class="btn btn-secondary">View Artifact</a>
+                            <a href="{{ route('outcomes.download', $outcome) }}" class="btn btn-secondary">Download</a>
+                        @endif
                     </td>
                 </tr>
             @endforeach

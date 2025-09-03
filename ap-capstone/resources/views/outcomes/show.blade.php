@@ -11,3 +11,5 @@
     <p>Commercialization Status: {{ $outcome->CommercializationStatus }}</p>
     <a href="{{ route('outcomes.index') }}" class="btn btn-secondary">Back</a>
 @endsection
+@endsection
+
