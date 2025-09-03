@@ -4,6 +4,7 @@
 
 @section('content')
     <h1>Edit Outcome</h1>
+    <form action="{{ route('outcomes.update', $outcome) }}" method="POST">
     <form action="{{ route('outcomes.update', $outcome) }}" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
         <div class="mb-3">
