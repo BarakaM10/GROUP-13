@@ -4,9 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Outcome;
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
+class OutcomeController extends Controller
+{
+    public function index(Request $request)
+    {
+        $projectId = $request->query('project_id');
+        $outcomes = Outcome::when($projectId, fn($q, $p) => $q->where('ProjectId', $p))
+            ->with('project')
+            ->paginate(10);
+        return view('outcomes.index', compact('outcomes'));
+    }
+
+    public function show(Outcome $outcome)
+    {
+        return view('outcomes.show', compact('outcome'));
+    }
+
+    public function create()
+    {
+        $projects = Project::all();
+        return view('outcomes.create', compact('projects'));
+    }
 class OutcomeController extends Controller
 {
     public function store(Request $request)
@@ -15,6 +36,11 @@ class OutcomeController extends Controller
             'ProjectId' => 'required|exists:projects,ProjectId',
             'Title' => 'required|string|max:255',
             'Description' => 'nullable|text',
+            'OutcomeType' => 'nullable|string',
+            'QualityCertification' => 'nullable|string',
+            'CommercializationStatus' => 'nullable|string',
+        ]);
+
             'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
             'OutcomeType' => 'nullable|string', // Metadata
             'QualityCertification' => 'nullable|string', // Metadata
@@ -29,12 +55,21 @@ class OutcomeController extends Controller
         return redirect()->route('outcomes.index')->with('success', 'Outcome created.');
     }
 
+    public function edit(Outcome $outcome)
+    {
+        $projects = Project::all();
+        return view('outcomes.edit', compact('outcome', 'projects'));
+    }
     public function update(Request $request, Outcome $outcome)
     {
         $validated = $request->validate([
             'ProjectId' => 'required|exists:projects,ProjectId',
             'Title' => 'required|string|max:255',
             'Description' => 'nullable|text',
+            'OutcomeType' => 'nullable|string',
+            'QualityCertification' => 'nullable|string',
+            'CommercializationStatus' => 'nullable|string',
+        ]);
             'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
             'OutcomeType' => 'nullable|string', // Metadata
             'QualityCertification' => 'nullable|string', // Metadata
@@ -54,6 +89,10 @@ class OutcomeController extends Controller
 
     public function destroy(Outcome $outcome)
     {
+        $outcome->delete();
+        return redirect()->route('outcomes.index')->with('success', 'Outcome deleted.');
+    }
+};
         if ($outcome->ArtifactLink) {
             Storage::disk('public')->delete($outcome->ArtifactLink);
         }

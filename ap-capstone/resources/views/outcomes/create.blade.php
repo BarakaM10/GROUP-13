@@ -4,6 +4,7 @@
 
 @section('content')
     <h1>Create Outcome</h1>
+    <form action="{{ route('outcomes.store') }}" method="POST">
     <form action="{{ route('outcomes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
@@ -23,6 +24,7 @@
             <textarea name="Description" class="form-control"></textarea>
         </div>
         <div class="mb-3">
+
             <label>Artifact File</label>
             <input type="file" name="ArtifactLink" class="form-control">
         </div>
@@ -41,3 +43,4 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 @endsection
+

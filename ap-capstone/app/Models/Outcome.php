@@ -13,6 +13,8 @@ class Outcome extends Model
     public $incrementing = true;
 
     protected $fillable = [
+        'ProjectId', 'Title', 'Description', 'OutcomeType',
+        'QualityCertification', 'CommercializationStatus'
         'ProjectId', 'Title', 'Description', 'ArtifactLink',
         'OutcomeType', 'QualityCertification', 'CommercializationStatus'
     ];

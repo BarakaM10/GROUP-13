@@ -10,7 +10,6 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-
             <a class="navbar-brand" href="/">Capstone App</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav">
@@ -23,8 +22,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    <li>
                         <a class="nav-link" href="{{ route('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('participants.index') }}">Participants</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('outcomes.index') }}">Outcomes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('facilities.index') }}">Facilities</a>

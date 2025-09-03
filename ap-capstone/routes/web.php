@@ -7,7 +7,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\OutcomeController;
 
+Route::resource('participants', ParticipantController::class);
+Route::resource('outcomes', OutcomeController::class);
 Route::resource('projects', ProjectController::class);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::resource('outcomes', OutcomeController::class);

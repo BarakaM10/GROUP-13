@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers;
@@ -77,6 +76,11 @@ class ProjectController extends Controller
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Title' => 'required|string|max:255',
             'NatureOfProject' => 'nullable|string',
+            'Description' => 'nullable|text',
+            'InnovationFocus' => 'nullable|string', // Editable per Week 2
+            'PrototypeStage' => 'nullable|string', // Editable per Week 2
+            'TestingRequirements' => 'nullable|string',
+            'CommercializationPlan' => 'nullable|text', // Editable per Week 2
             'Description' => 'nullable|string',
             'InnovationFocus' => 'nullable|string',
             'PrototypeStage' => 'nullable|string',
@@ -87,12 +91,14 @@ class ProjectController extends Controller
         ]);
 
         $project->update($validated);
-
-        // Sync participants (add/remove)
+      
         $project->participants()->sync($validated['participants'] ?? []);
 
         return redirect()->route('projects.index')->with('success', 'Project updated.');
     }
+
+};
+
 
     public function destroy(Project $project)
     {
