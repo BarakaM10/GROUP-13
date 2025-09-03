@@ -97,9 +97,6 @@ class ProjectController extends Controller
         return redirect()->route('projects.index')->with('success', 'Project updated.');
     }
 
-};
-
-
     public function destroy(Project $project)
     {
         if ($project->outcomes()->exists() || $project->participants()->exists()) {
@@ -108,4 +105,6 @@ class ProjectController extends Controller
         $project->delete();
         return redirect()->route('projects.index')->with('success', 'Project deleted.');
     }
-}
+
+};
+

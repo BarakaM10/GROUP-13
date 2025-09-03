@@ -14,7 +14,7 @@ class Outcome extends Model
 
     protected $fillable = [
         'ProjectId', 'Title', 'Description', 'OutcomeType',
-        'QualityCertification', 'CommercializationStatus'
+        'QualityCertification', 'CommercializationStatus',
         'ProjectId', 'Title', 'Description', 'ArtifactLink',
         'OutcomeType', 'QualityCertification', 'CommercializationStatus'
     ];

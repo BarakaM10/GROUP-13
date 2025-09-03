@@ -28,8 +28,7 @@ class OutcomeController extends Controller
         $projects = Project::all();
         return view('outcomes.create', compact('projects'));
     }
-class OutcomeController extends Controller
-{
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,8 +38,6 @@ class OutcomeController extends Controller
             'OutcomeType' => 'nullable|string',
             'QualityCertification' => 'nullable|string',
             'CommercializationStatus' => 'nullable|string',
-        ]);
-
             'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
             'OutcomeType' => 'nullable|string', // Metadata
             'QualityCertification' => 'nullable|string', // Metadata
@@ -60,6 +57,7 @@ class OutcomeController extends Controller
         $projects = Project::all();
         return view('outcomes.edit', compact('outcome', 'projects'));
     }
+
     public function update(Request $request, Outcome $outcome)
     {
         $validated = $request->validate([
@@ -69,7 +67,6 @@ class OutcomeController extends Controller
             'OutcomeType' => 'nullable|string',
             'QualityCertification' => 'nullable|string',
             'CommercializationStatus' => 'nullable|string',
-        ]);
             'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
             'OutcomeType' => 'nullable|string', // Metadata
             'QualityCertification' => 'nullable|string', // Metadata
@@ -92,13 +89,6 @@ class OutcomeController extends Controller
         $outcome->delete();
         return redirect()->route('outcomes.index')->with('success', 'Outcome deleted.');
     }
-};
-        if ($outcome->ArtifactLink) {
-            Storage::disk('public')->delete($outcome->ArtifactLink);
-        }
-        $outcome->delete();
-        return redirect()->route('outcomes.index')->with('success', 'Outcome deleted.');
-    }
 
     public function download(Outcome $outcome)
     {
@@ -108,7 +98,7 @@ class OutcomeController extends Controller
         }
         return back()->with('error', 'File not found.');
     }
-
+    
     public function view(Outcome $outcome)
     {
         if ($outcome->ArtifactLink && Storage::disk('public')->exists($outcome->ArtifactLink)) {
