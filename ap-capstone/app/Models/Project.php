@@ -17,6 +17,16 @@ class Project extends Model
         'InnovationFocus', 'PrototypeStage', 'TestingRequirements', 'CommercializationPlan'
     ];
 
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'ProgramId', 'ProgramId');
+    }
+
+    public function facility()
+    {
+        return $this->belongsTo(Facility::class, 'FacilityId', 'FacilityId');
+    }
+
     public function participants()
     {
         return $this->belongsToMany(Participant::class, 'project_participants', 'ProjectId', 'ParticipantId')

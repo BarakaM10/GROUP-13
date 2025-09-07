@@ -4,34 +4,39 @@
 
 @section('content')
     <h1>Edit Service</h1>
-    <form action="{{ route('services.update', $service) }}" method="POST">
-        @csrf @method('PUT')
-        <div class="mb-3">
-            <label>Facility</label>
-            <select name="FacilityId" class="form-control" required>
+    <form action="{{ route('services.update', $service->ServiceId) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" name="Name" id="Name" class="form-control" value="{{ old('Name', $service->Name) }}" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="FacilityId">Facility</label>
+            <select name="FacilityId" id="FacilityId" class="form-control" required>
                 @foreach($facilities as $facility)
-                    <option value="{{ $facility->FacilityId }}" {{ $service->FacilityId == $facility->FacilityId ? 'selected' : '' }}>
-                        {{ $facility->Name }}
-                    </option>
+                    <option value="{{ $facility->FacilityId }}" {{ $facility->FacilityId == $service->FacilityId ? 'selected' : '' }}>{{ $facility->Name }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="mb-3">
-            <label>Name</label>
-            <input type="text" name="Name" class="form-control" value="{{ $service->Name }}" required>
+        <br>
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $service->Description) }}</textarea>
         </div>
-        <div class="mb-3">
-            <label>Description</label>
-            <textarea name="Description" class="form-control">{{ $service->Description }}</textarea>
+        <br>
+        <div class="form-group">
+            <label for="Category">Category</label>
+            <input type="text" name="Category" id="Category" class="form-control" value="{{ old('Category', $service->Category) }}">
         </div>
-        <div class="mb-3">
-            <label>Category</label>
-            <input type="text" name="Category" class="form-control" value="{{ $service->Category }}">
+        <br>
+        <div class="form-group">
+            <label for="SkillType">Skill Type</label>
+            <input type="text" name="SkillType" id="SkillType" class="form-control" value="{{ old('SkillType', $service->SkillType) }}">
         </div>
-        <div class="mb-3">
-            <label>Skill Type</label>
-            <input type="text" name="SkillType" class="form-control" value="{{ $service->SkillType }}">
-        </div>
+        <br>
         <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('services.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

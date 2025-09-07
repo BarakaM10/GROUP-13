@@ -4,11 +4,11 @@
 
 @section('content')
     <h1>{{ $equipment->Name }}</h1>
-    <p>Facility: {{ $equipment->facility->Name }}</p>
-    <p>Capabilities: {{ $equipment->Capabilities }}</p>
-    <p>Description: {{ $equipment->Description }}</p>
-    <p>Inventory Code: {{ $equipment->InventoryCode }}</p>
-    <p>Usage Domain: {{ $equipment->UsageDomain }}</p>
-    <p>Support Phase: {{ $equipment->SupportPhase }}</p>
+    <p><strong>Facility:</strong> {{ $equipment->facility->Name }}</p>
+    <p><strong>Capabilities:</strong> {{ $equipment->Capabilities ?? 'N/A' }}</p>
+    <p><strong>Description:</strong> {{ $equipment->Description ?? 'N/A' }}</p>
+    <p><strong>Inventory Code:</strong> {{ $equipment->InventoryCode ?? 'N/A' }}</p>
+    <p><strong>Usage Domain:</strong> {{ $equipment->UsageDomain ?? 'N/A' }}</p>
+    <p><strong>Support Phase:</strong> {{ $equipment->SupportPhase ?? 'N/A' }}</p>
     <a href="{{ route('equipment.index') }}" class="btn btn-secondary">Back</a>
 @endsection

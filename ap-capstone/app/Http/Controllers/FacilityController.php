@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facility;
 use Illuminate\Http\Request;
 
-class FacilityController extends Controller
+class FacilityController
 {
     public function index(Request $request)
     {
@@ -38,7 +38,7 @@ class FacilityController extends Controller
         $validated = $request->validate([
             'Name' => 'required|string|max:255',
             'Location' => 'nullable|string',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'PartnerOrganization' => 'nullable|string',
             'FacilityType' => 'nullable|string',
             'Capabilities' => 'nullable|string',
@@ -57,7 +57,7 @@ class FacilityController extends Controller
         $validated = $request->validate([
             'Name' => 'required|string|max:255',
             'Location' => 'nullable|string',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'PartnerOrganization' => 'nullable|string',
             'FacilityType' => 'nullable|string',
             'Capabilities' => 'nullable|string',

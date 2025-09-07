@@ -3,9 +3,18 @@
 @section('title', 'Capstone Dashboard')
 
 @section('content')
-    <h1>Welcome to the Capstone Management System</h1>
-    <p>Manage your facilities, services, equipment, projects, participants, and outcomes.</p>
+    <h1>Welcome to the Capstone Management System!!!</h1>
+    <p>Manage your facilities, services, equipment, projects, participants, outcomes, and programs.</p>
     <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Programs</h5>
+                    <p class="card-text">Manage programs overseeing projects.</p>
+                    <a href="{{ route('programs.index') }}" class="btn btn-primary">Go to Programs</a>
+                </div>
+            </div>
+        </div>
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
@@ -24,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Equipment</h5>

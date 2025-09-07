@@ -1,56 +1,66 @@
 @extends('layouts.app')
+
 @section('title', 'Edit Project')
 
 @section('content')
     <h1>Edit Project</h1>
-    <form action="{{ route('projects.update', $project) }}" method="POST">
-        @csrf @method('PUT')
-    
-        <div class="mb-3">
-            <label>Innovation Focus</label>
-            <input type="text" name="InnovationFocus" class="form-control" value="{{ $project->InnovationFocus }}">
+    <form action="{{ route('projects.update', $project->ProjectId) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <label for="Title">Title</label>
+            <input type="text" name="Title" id="Title" class="form-control" value="{{ old('Title', $project->Title) }}" required>
         </div>
-        <div class="mb-3">
-            <label>Prototype Stage</label>
-            <input type="text" name="PrototypeStage" class="form-control" value="{{ $project->PrototypeStage }}">
+        <br>
+        <div class="form-group">
+            <label for="ProgramId">Program</label>
+            <select name="ProgramId" id="ProgramId" class="form-control" required>
+                @foreach($programs as $program)
+                    <option value="{{ $program->ProgramId }}" {{ $program->ProgramId == $project->ProgramId ? 'selected' : '' }}>{{ $program->Name }}</option>
+                @endforeach
+            </select>
         </div>
-        <div class="mb-3">
-            <label>Commercialization Plan</label>
-            <textarea name="CommercializationPlan" class="form-control">{{ $project->CommercializationPlan }}</textarea>
+        <br>
+        <div class="form-group">
+            <label for="FacilityId">Facility</label>
+            <select name="FacilityId" id="FacilityId" class="form-control" required>
+                @foreach($facilities as $facility)
+                    <option value="{{ $facility->FacilityId }}" {{ $facility->FacilityId == $project->FacilityId ? 'selected' : '' }}>{{ $facility->Name }}</option>
+                @endforeach
+            </select>
         </div>
+        <br>
+        <div class="form-group">
+            <label for="NatureOfProject">Nature of Project</label>
+            <input type="text" name="NatureOfProject" id="NatureOfProject" class="form-control" value="{{ old('NatureOfProject', $project->NatureOfProject) }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $project->Description) }}</textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="InnovationFocus">Innovation Focus</label>
+            <input type="text" name="InnovationFocus" id="InnovationFocus" class="form-control" value="{{ old('InnovationFocus', $project->InnovationFocus) }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="PrototypeStage">Prototype Stage</label>
+            <input type="text" name="PrototypeStage" id="PrototypeStage" class="form-control" value="{{ old('PrototypeStage', $project->PrototypeStage) }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="TestingRequirements">Testing Requirements</label>
+            <input type="text" name="TestingRequirements" id="TestingRequirements" class="form-control" value="{{ old('TestingRequirements', $project->TestingRequirements) }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="CommercializationPlan">Commercialization Plan</label>
+            <textarea name="CommercializationPlan" id="CommercializationPlan" class="form-control">{{ old('CommercializationPlan', $project->CommercializationPlan) }}</textarea>
+        </div>
+        <br>
         <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-@endsection
-@section('title', 'Edit Participant')
-
-@section('content')
-    <h1>Edit Participant</h1>
-    <form action="{{ route('participants.update', $participant) }}" method="POST">
-        @csrf @method('PUT')
-        <div class="mb-3">
-            <label>Full Name</label>
-            <input type="text" name="FullName" class="form-control" value="{{ $participant->FullName }}" required>
-        </div>
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="Email" class="form-control" value="{{ $participant->Email }}" required>
-        </div>
-        <div class="mb-3">
-            <label>Affiliation</label>
-            <input type="text" name="Affiliation" class="form-control" value="{{ $participant->Affiliation }}">
-        </div>
-        <div class="mb-3">
-            <label>Specialization</label>
-            <input type="text" name="Specialization" class="form-control" value="{{ $participant->Specialization }}">
-        </div>
-        <div class="mb-3">
-            <label>Cross-Skill Trained</label>
-            <input type="checkbox" name="CrossSkillTrained" value="1" {{ $participant->CrossSkillTrained ? 'checked' : '' }}>
-        </div>
-        <div class="mb-3">
-            <label>Institution</label>
-            <input type="text" name="Institution" class="form-control" value="{{ $participant->Institution }}">
-        </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('projects.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

@@ -4,29 +4,38 @@
 
 @section('content')
     <h1>{{ $facility->Name }}</h1>
-    <p>Location: {{ $facility->Location }}</p>
-    <p>Description: {{ $facility->Description }}</p>
-    <p>Partner: {{ $facility->PartnerOrganization }}</p>
-    <p>Type: {{ $facility->FacilityType }}</p>
-    <p>Capabilities: {{ $facility->Capabilities }}</p>
-    <!-- List related -->
-    <h2>Services</h2>
+    <p><strong>Location:</strong> {{ $facility->Location }}</p>
+    <p><strong>Description:</strong> {{ $facility->Description ?? 'None' }}</p>
+    <p><strong>Capabilities:</strong> {{ $facility->Capabilities ?? 'None' }}</p>
+    <h2>Related Services</h2>
     <ul>
-        @foreach($facility->services as $service)
-            <li>{{ $service->Name }}</li>
-        @endforeach
+        @if($facility->services->isEmpty())
+            <li>None</li>
+        @else
+            @foreach($facility->services as $service)
+                <li>{{ $service->Name }}</li>
+            @endforeach
+        @endif
     </ul>
-    <h2>Equipment</h2>
+    <h2>Related Equipment</h2>
     <ul>
-        @foreach($facility->equipment as $equipment)
-            <li>{{ $equipment->Name }}</li>
-        @endforeach
+        @if($facility->equipment->isEmpty())
+            <li>None</li>
+        @else
+            @foreach($facility->equipment as $equipment)
+                <li>{{ $equipment->Name }}</li>
+            @endforeach
+        @endif
     </ul>
-    <h2>Projects</h2>
+    <h2>Related Projects</h2>
     <ul>
-        @foreach($facility->projects as $project)
-            <li>{{ $project->Title }}</li>
-        @endforeach
+        @if($facility->projects->isEmpty())
+            <li>None</li>
+        @else
+            @foreach($facility->projects as $project)
+                <li>{{ $project->Title }}</li>
+            @endforeach
+        @endif
     </ul>
     <a href="{{ route('facilities.index') }}" class="btn btn-secondary">Back</a>
 @endsection

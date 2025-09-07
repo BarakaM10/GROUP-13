@@ -7,7 +7,7 @@ use App\Models\Facility;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
-class EquipmentController extends Controller
+class EquipmentController
 {
     public function index(Request $request)
     {
@@ -41,7 +41,7 @@ class EquipmentController extends Controller
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Name' => 'required|string|max:255',
             'Capabilities' => 'nullable|string',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'InventoryCode' => 'nullable|string',
             'UsageDomain' => 'nullable|string',
             'SupportPhase' => 'nullable|string',
@@ -62,7 +62,7 @@ class EquipmentController extends Controller
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Name' => 'required|string|max:255',
             'Capabilities' => 'nullable|string',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'InventoryCode' => 'nullable|string',
             'UsageDomain' => 'nullable|string',
            'SupportPhase' => 'nullable|string',
@@ -73,7 +73,6 @@ class EquipmentController extends Controller
 
     public function destroy(Equipment $equipment)
     {
-        // Check if equipment is tied to active projects (Week 2 task)
         $projects = Project::where('FacilityId', $equipment->FacilityId)->exists();
         if ($projects) {
             return back()->with('error', 'Cannot delete equipment tied to active projects.');

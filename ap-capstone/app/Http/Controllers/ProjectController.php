@@ -8,7 +8,7 @@ use App\Models\Facility;
 use App\Models\Participant;
 use Illuminate\Http\Request;
 
-class ProjectController extends Controller
+class ProjectController
 {
     public function index(Request $request)
     {
@@ -76,16 +76,11 @@ class ProjectController extends Controller
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Title' => 'required|string|max:255',
             'NatureOfProject' => 'nullable|string',
-            'Description' => 'nullable|text',
-            'InnovationFocus' => 'nullable|string', // Editable per Week 2
-            'PrototypeStage' => 'nullable|string', // Editable per Week 2
-            'TestingRequirements' => 'nullable|string',
-            'CommercializationPlan' => 'nullable|text', // Editable per Week 2
             'Description' => 'nullable|string',
             'InnovationFocus' => 'nullable|string',
-            'PrototypeStage' => 'nullable|string',
+            'PrototypeStage' => 'nullable|string', 
             'TestingRequirements' => 'nullable|string',
-            'CommercializationPlan' => 'nullable|string',
+            'CommercializationPlan' => 'nullable|string', 
             'participants' => 'array',
             'participants.*' => 'exists:participants,ParticipantId',
         ]);
@@ -96,9 +91,6 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('success', 'Project updated.');
     }
-
-};
-
 
     public function destroy(Project $project)
     {

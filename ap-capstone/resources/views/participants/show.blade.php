@@ -4,16 +4,20 @@
 
 @section('content')
     <h1>{{ $participant->FullName }}</h1>
-    <p>Email: {{ $participant->Email }}</p>
-    <p>Affiliation: {{ $participant->Affiliation }}</p>
-    <p>Specialization: {{ $participant->Specialization }}</p>
-    <p>Cross-Skill Trained: {{ $participant->CrossSkillTrained ? 'Yes' : 'No' }}</p>
-    <p>Institution: {{ $participant->Institution }}</p>
+    <p><strong>Email:</strong> {{ $participant->Email }}</p>
+    <p><strong>Affiliation:</strong> {{ $participant->Affiliation ?? 'None' }}</p>
+    <p><strong>Specialization:</strong> {{ $participant->Specialization ?? 'None' }}</p>
+    <p><strong>Cross-Skill Trained:</strong> {{ $participant->CrossSkillTrained ? 'Yes' : 'No' }}</p>
+    <p><strong>Institution:</strong> {{ $participant->Institution ?? 'None' }}</p>
     <h2>Projects</h2>
     <ul>
-        @foreach($participant->projects as $project)
-            <li>{{ $project->Title }} ({{ $project->pivot->RoleOnProject }})</li>
-        @endforeach
+        @if($participant->projects->isEmpty())
+            <li>None</li>
+        @else
+            @foreach($participant->projects as $project)
+                <li>{{ $project->Title }} ({{ $project->pivot->RoleOnProject ?? 'N/A' }})</li>
+            @endforeach
+        @endif
     </ul>
     <a href="{{ route('participants.index') }}" class="btn btn-secondary">Back</a>
 @endsection

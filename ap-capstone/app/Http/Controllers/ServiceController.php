@@ -6,7 +6,7 @@ use App\Models\Service;
 use App\Models\Facility;
 use Illuminate\Http\Request;
 
-class ServiceController extends Controller
+class ServiceController
 {
     public function index(Request $request)
     {
@@ -37,7 +37,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Name' => 'required|string|max:255',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'Category' => 'nullable|string',
             'SkillType' => 'nullable|string',
         ]);
@@ -56,7 +56,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'FacilityId' => 'required|exists:facilities,FacilityId',
             'Name' => 'required|string|max:255',
-            'Description' => 'nullable|text',
+            'Description' => 'nullable|string',
             'Category' => 'nullable|string',
             'SkillType' => 'nullable|string',
         ]);

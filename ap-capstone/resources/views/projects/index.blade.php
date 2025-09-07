@@ -1,35 +1,38 @@
 @extends('layouts.app')
 
-@section('title', 'Participants')
+@section('title', 'Projects')
 
 @section('content')
-    <h1>Participants</h1>
-    <a href="{{ route('participants.create') }}" class="btn btn-primary">Create Participant</a>
-    <table class="table mt-3">
+    <h1>Projects</h1>
+    <a href="{{ route('projects.create') }}" class="btn btn-primary mb-3">Create Project</a>
+    <table class="table">
         <thead>
             <tr>
-                <th>Full Name</th>
-                <th>Email</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Program</th>
+                <th>Facility</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($participants as $participant)
+            @foreach($projects as $project)
                 <tr>
-                    <td>{{ $participant->FullName }}</td>
-                    <td>{{ $participant->Email }}</td>
+                    <td>{{ $project->ProjectId }}</td>
+                    <td>{{ $project->Title }}</td>
+                    <td>{{ $project->program->Name ?? 'None' }}</td>
+                    <td>{{ $project->facility->Name ?? 'None' }}</td>
                     <td>
-                        <a href="{{ route('participants.show', $participant) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('participants.edit', $participant) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('participants.destroy', $participant) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        <a href="{{ route('projects.show', $project->ProjectId) }}" class="btn btn-sm btn-success">View</a>
+                        <a href="{{ route('projects.edit', $project->ProjectId) }}" class="btn btn-sm btn-info">Edit</a>
+                        <form action="{{ route('projects.destroy', $project->ProjectId) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    {{ $participants->links() }}
 @endsection
-

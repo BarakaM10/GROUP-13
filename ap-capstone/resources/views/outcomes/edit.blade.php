@@ -4,49 +4,66 @@
 
 @section('content')
     <h1>Edit Outcome</h1>
-    <form action="{{ route('outcomes.update', $outcome) }}" method="POST">
-
-    <form action="{{ route('outcomes.update', $outcome) }}" method="POST" enctype="multipart/form-data">
-        @csrf @method('PUT')
-        <div class="mb-3">
-            <label>Project</label>
-            <select name="ProjectId" class="form-control" required>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <form action="{{ route('outcomes.update', $outcome->OutcomeId) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <label for="Title">Title</label>
+            <input type="text" name="Title" id="Title" class="form-control" value="{{ old('Title', $outcome->Title) }}" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="ProjectId">Project</label>
+            <select name="ProjectId" id="ProjectId" class="form-control" required>
                 @foreach($projects as $project)
-                    <option value="{{ $project->ProjectId }}" {{ $outcome->ProjectId == $project->ProjectId ? 'selected' : '' }}>
-                        {{ $project->Title }}
-                    </option>
+                    <option value="{{ $project->ProjectId }}" {{ $project->ProjectId == $outcome->ProjectId ? 'selected' : '' }}>{{ $project->Title }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="mb-3">
-            <label>Title</label>
-            <input type="text" name="Title" class="form-control" value="{{ $outcome->Title }}" required>
+        <br>
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $outcome->Description) }}</textarea>
         </div>
-        <div class="mb-3">
-            <label>Description</label>
-            <textarea name="Description" class="form-control">{{ $outcome->Description }}</textarea>
-        </div>
-        <div class="mb-3">
-
-            <label>Artifact File</label>
-            <input type="file" name="ArtifactLink" class="form-control">
+        <br>
+        <div class="form-group">
+            <label for="ArtifactLink">Upload New Artifact (PDF, DOC, DOCX, JPG, PNG, max 2MB)</label>
+            <input type="file" name="ArtifactLink" id="ArtifactLink" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png">
             @if($outcome->ArtifactLink)
-                <p>Current: {{ $outcome->ArtifactLink }}</p>
+                <p>Current Artifact: <a href="{{ route('outcomes.download', $outcome->OutcomeId) }}" target="_blank">{{ basename($outcome->ArtifactLink) }}</a></p>
+            @else
+                <p>No artifact uploaded.</p>
             @endif
         </div>
-        <div class="mb-3">
-            <label>Outcome Type</label>
-            <input type="text" name="OutcomeType" class="form-control" value="{{ $outcome->OutcomeType }}">
+        <br>
+        <div class="form-group">
+            <label for="OutcomeType">Outcome Type</label>
+            <input type="text" name="OutcomeType" id="OutcomeType" class="form-control" value="{{ old('OutcomeType', $outcome->OutcomeType) }}">
         </div>
-        <div class="mb-3">
-            <label>Quality Certification</label>
-            <input type="text" name="QualityCertification" class="form-control" value="{{ $outcome->QualityCertification }}">
+        <br>
+        <div class="form-group">
+            <label for="QualityCertification">Quality Certification</label>
+            <input type="text" name="QualityCertification" id="QualityCertification" class="form-control" value="{{ old('QualityCertification', $outcome->QualityCertification) }}">
         </div>
-        <div class="mb-3">
-            <label>Commercialization Status</label>
-            <input type="text" name="CommercializationStatus" class="form-control" value="{{ $outcome->CommercializationStatus }}">
+        <br>
+        <div class="form-group">
+            <label for="CommercializationStatus">Commercialization Status</label>
+            <input type="text" name="CommercializationStatus" id="CommercializationStatus" class="form-control" value="{{ old('CommercializationStatus', $outcome->CommercializationStatus) }}">
         </div>
+        <br>
         <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('outcomes.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
-@endsection
 @endsection

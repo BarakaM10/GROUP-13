@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('equipment', function (Blueprint $table) {
-            $table->id();
+            $table->id('EquipmentId');
+            $table->foreignId('FacilityId')->constrained('facilities', 'FacilityId')->onDelete('cascade');
+            $table->string('Name');
+            $table->string('Capabilities')->nullable();
+            $table->text('Description')->nullable();
+            $table->string('InventoryCode')->nullable();
+            $table->string('UsageDomain')->nullable();
+            $table->string('SupportPhase')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('equipment');
