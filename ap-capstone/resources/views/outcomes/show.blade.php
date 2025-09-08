@@ -1,26 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'View Outcome')
-
 @section('content')
-    <h1>Outcome Details</h1>
-    @if (session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    
-    <p><strong>ID:</strong> {{ $outcome->OutcomeId }}</p>
-    <p><strong>Title:</strong> {{ $outcome->Title }}</p>
-    <p><strong>Project:</strong> {{ $outcome->project->Title ?? 'None' }}</p>
-    <p><strong>Description:</strong> {{ $outcome->Description ?? 'None' }}</p>
-    @if($outcome->ArtifactLink)
-        <p><strong>Artifact:</strong> <a href="{{ route('outcomes.download', $outcome->OutcomeId) }}"
-                target="_blank">{{ basename($outcome->ArtifactLink) }}</a></p>
-    @else
-        <p><strong>Artifact:</strong> None</p>
-    @endif
-    <p><strong>Outcome Type:</strong> {{ $outcome->OutcomeType ?? 'None' }}</p>
-    <p><strong>Quality Certification:</strong> {{ $outcome->QualityCertification ?? 'None' }}</p>
-    <p><strong>Commercialization Status:</strong> {{ $outcome->CommercializationStatus ?? 'None' }}</p>
-
-    <a href="{{ route('outcomes.index') }}" class="btn btn-secondary mt-3">Back</a>
+    <h1>{{ $outcome->title }}</h1>
+    <p><strong>Description:</strong> {{ $outcome->description }}</p>
+    <p><strong>Outcome Type:</strong> {{ $outcome->outcome_type }}</p>
+    <p><strong>Quality Certification:</strong> {{ $outcome->quality_certification }}</p>
+    <p><strong>Commercialization Status:</strong> {{ $outcome->commercialization_status }}</p>
+    <p><strong>Project:</strong> {{ $outcome->project->title }}</p>
+    <p><strong>Artifact:</strong> 
+        @if ($outcome->artifact_link)
+            <a href="{{ asset('storage/' . $outcome->artifact_link) }}" download>Download</a>
+        @else
+            None
+        @endif
+    </p>
+    <a href="{{ route('outcomes.edit', $outcome) }}" class="btn btn-primary">Edit</a>
+    <form action="{{ route('outcomes.destroy', $outcome) }}" method="POST" style="display: inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+    </form>
 @endsection

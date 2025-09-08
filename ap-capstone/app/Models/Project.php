@@ -9,32 +9,31 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ProjectId';
-    public $incrementing = true;
+    const NATURES = ['Research', 'Prototype', 'Applied'];
+    const PROTOTYPE_STAGES = ['Concept', 'Prototype', 'MVP', 'Market Launch'];
 
     protected $fillable = [
-        'ProgramId', 'FacilityId', 'Title', 'NatureOfProject', 'Description',
-        'InnovationFocus', 'PrototypeStage', 'TestingRequirements', 'CommercializationPlan'
+        'program_id', 'facility_id', 'title', 'nature_of_project', 'description', 'innovation_focus',
+        'prototype_stage', 'testing_requirements', 'commercialization_plan',
     ];
 
     public function program()
     {
-        return $this->belongsTo(Program::class, 'ProgramId', 'ProgramId');
+        return $this->belongsTo(Program::class);
     }
 
     public function facility()
     {
-        return $this->belongsTo(Facility::class, 'FacilityId', 'FacilityId');
+        return $this->belongsTo(Facility::class);
     }
 
     public function participants()
     {
-        return $this->belongsToMany(Participant::class, 'project_participants', 'ProjectId', 'ParticipantId')
-            ->withPivot('RoleOnProject', 'SkillRole');
+        return $this->hasMany(ProjectParticipant::class);
     }
 
     public function outcomes()
     {
-        return $this->hasMany(Outcome::class, 'ProjectId', 'ProjectId');
+        return $this->hasMany(Outcome::class);
     }
-};
+}

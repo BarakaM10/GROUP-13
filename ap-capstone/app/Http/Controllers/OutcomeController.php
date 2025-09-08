@@ -4,23 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Outcome;
 use App\Models\Project;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class OutcomeController
 {
-    public function index(Request $request)
+    public function index()
     {
-        $projectId = $request->query('project_id');
-        $outcomes = Outcome::when($projectId, fn($q, $p) => $q->where('ProjectId', $p))
-            ->with('project')
-            ->paginate(10);
+        $outcomes = Outcome::all();
         return view('outcomes.index', compact('outcomes'));
-    }
-
-    public function show(Outcome $outcome)
-    {
-        return view('outcomes.show', compact('outcome'));
     }
 
     public function create()
@@ -32,21 +23,27 @@ class OutcomeController
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'ProjectId' => 'required|exists:projects,ProjectId',
-            'Title' => 'required|string|max:255',
-            'Description' => 'nullable|string',
-            'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
-            'OutcomeType' => 'nullable|string', 
-            'QualityCertification' => 'nullable|string', 
-            'CommercializationStatus' => 'nullable|string', 
+            'project_id' => 'required|exists:projects,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'artifact' => 'nullable|file|mimes:pdf,zip,jpg,png,cad|max:2048',
+            'outcome_type' => 'nullable|in:' . implode(',', Outcome::OUTCOME_TYPES),
+            'quality_certification' => 'nullable|string|max:255',
+            'commercialization_status' => 'nullable|in:' . implode(',', Outcome::COMMERCIALIZATION_STATUSES),
         ]);
 
-        if ($request->hasFile('ArtifactLink')) {
-            $validated['ArtifactLink'] = $request->file('ArtifactLink')->store('artifacts', 'public');
+        if ($request->hasFile('artifact')) {
+            $validated['artifact_link'] = $request->file('artifact')->store('artifacts', 'public');
         }
 
         Outcome::create($validated);
-        return redirect()->route('outcomes.index')->with('success', 'Outcome created.');
+
+        return redirect()->route('outcomes.index')->with('success', 'Outcome created successfully.');
+    }
+
+    public function show(Outcome $outcome)
+    {
+        return view('outcomes.show', compact('outcome'));
     }
 
     public function edit(Outcome $outcome)
@@ -58,41 +55,28 @@ class OutcomeController
     public function update(Request $request, Outcome $outcome)
     {
         $validated = $request->validate([
-            'ProjectId' => 'required|exists:projects,ProjectId',
-            'Title' => 'required|string|max:255',
-            'Description' => 'nullable|string',
-            'ArtifactLink' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // File upload
-            'OutcomeType' => 'nullable|string', 
-            'QualityCertification' => 'nullable|string', 
-            'CommercializationStatus' => 'nullable|string', 
+            'project_id' => 'required|exists:projects,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'artifact' => 'nullable|file|mimes:pdf,zip,jpg,png,cad|max:2048',
+            'outcome_type' => 'nullable|in:' . implode(',', Outcome::OUTCOME_TYPES),
+            'quality_certification' => 'nullable|string|max:255',
+            'commercialization_status' => 'nullable|in:' . implode(',', Outcome::COMMERCIALIZATION_STATUSES),
         ]);
 
-        if ($request->hasFile('ArtifactLink')) {
-            if ($outcome->ArtifactLink) {
-                Storage::disk('public')->delete($outcome->ArtifactLink);
-            }
-            $validated['ArtifactLink'] = $request->file('ArtifactLink')->store('artifacts', 'public');
+        if ($request->hasFile('artifact')) {
+            $validated['artifact_link'] = $request->file('artifact')->store('artifacts', 'public');
         }
 
         $outcome->update($validated);
-        return redirect()->route('outcomes.index')->with('success', 'Outcome updated.');
+
+        return redirect()->route('outcomes.show', $outcome)->with('success', 'Outcome updated successfully.');
     }
 
     public function destroy(Outcome $outcome)
     {
-        if ($outcome->ArtifactLink) {
-            Storage::disk('public')->delete($outcome->ArtifactLink);
-        }
         $outcome->delete();
-        return redirect()->route('outcomes.index')->with('success', 'Outcome deleted.');
-    }
 
-    public function download(Outcome $outcome)
-    {
-        if ($outcome->ArtifactLink && Storage::disk('public')->exists($outcome->ArtifactLink)) {
-            $filePath = Storage::disk('public')->path($outcome->ArtifactLink);
-            return response()->download($filePath);
-        }
-        return back()->with('error', 'File not found.');
+        return redirect()->route('outcomes.index')->with('success', 'Outcome deleted successfully.');
     }
-};
+}

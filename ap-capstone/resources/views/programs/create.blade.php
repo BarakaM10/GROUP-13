@@ -1,37 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Create Program')
-
 @section('content')
     <h1>Create Program</h1>
     <form action="{{ route('programs.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" class="form-control" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control"></textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="NationalAlignment">National Alignment</label>
-            <input type="text" name="NationalAlignment" id="NationalAlignment" class="form-control">
+        <div class="mb-3">
+            <label for="national_alignment" class="form-label">National Alignment</label>
+            <textarea name="national_alignment" id="national_alignment" class="form-control"></textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="FocusAreas">Focus Areas</label>
-            <input type="text" name="FocusAreas" id="FocusAreas" class="form-control">
+        <div class="mb-3">
+            <label for="focus_areas" class="form-label">Focus Areas</label>
+            <textarea name="focus_areas" id="focus_areas" class="form-control"></textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Phases">Phases</label>
-            <input type="text" name="Phases" id="Phases" class="form-control">
+        <div class="mb-3">
+            <label for="phases" class="form-label">Phases</label>
+            <textarea name="phases" id="phases" class="form-control"></textarea>
         </div>
-        <br>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a href="{{ route('programs.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

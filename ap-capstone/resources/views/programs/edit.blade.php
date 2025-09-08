@@ -1,38 +1,30 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Program')
-
 @section('content')
     <h1>Edit Program</h1>
-    <form action="{{ route('programs.update', $program->ProgramId) }}" method="POST">
+    <form action="{{ route('programs.update', $program) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" class="form-control" value="{{ old('Name', $program->Name) }}" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $program->name }}" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $program->Description) }}</textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control">{{ $program->description }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="NationalAlignment">National Alignment</label>
-            <input type="text" name="NationalAlignment" id="NationalAlignment" class="form-control" value="{{ old('NationalAlignment', $program->NationalAlignment) }}">
+        <div class="mb-3">
+            <label for="national_alignment" class="form-label">National Alignment</label>
+            <textarea name="national_alignment" id="national_alignment" class="form-control">{{ $program->national_alignment }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="FocusAreas">Focus Areas</label>
-            <input type="text" name="FocusAreas" id="FocusAreas" class="form-control" value="{{ old('FocusAreas', $program->FocusAreas) }}">
+        <div class="mb-3">
+            <label for="focus_areas" class="form-label">Focus Areas</label>
+            <textarea name="focus_areas" id="focus_areas" class="form-control">{{ $program->focus_areas }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Phases">Phases</label>
-            <input type="text" name="Phases" id="Phases" class="form-control" value="{{ old('Phases', $program->Phases) }}">
+        <div class="mb-3">
+            <label for="phases" class="form-label">Phases</label>
+            <textarea name="phases" id="phases" class="form-control">{{ $program->phases }}</textarea>
         </div>
-        <br>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('programs.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

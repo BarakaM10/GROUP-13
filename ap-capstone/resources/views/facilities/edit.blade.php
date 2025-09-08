@@ -1,43 +1,39 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Facility')
-
 @section('content')
     <h1>Edit Facility</h1>
-    <form action="{{ route('facilities.update', $facility->FacilityId) }}" method="POST">
+    <form action="{{ route('facilities.update', $facility) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" class="form-control" value="{{ old('Name', $facility->Name) }}" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $facility->name }}" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Location">Location</label>
-            <input type="text" name="Location" id="Location" class="form-control" value="{{ old('Location', $facility->Location) }}">
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" name="location" id="location" class="form-control" value="{{ $facility->location }}" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $facility->Description) }}</textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control">{{ $facility->description }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="PartnerOrganization">Partner Organization</label>
-            <input type="text" name="PartnerOrganization" id="PartnerOrganization" class="form-control" value="{{ old('PartnerOrganization', $facility->PartnerOrganization) }}">
+        <div class="mb-3">
+            <label for="partner_organization" class="form-label">Partner Organization</label>
+            <input type="text" name="partner_organization" id="partner_organization" class="form-control" value="{{ $facility->partner_organization }}">
         </div>
-        <br>
-        <div class="form-group">
-            <label for="FacilityType">Facility Type</label>
-            <input type="text" name="FacilityType" id="FacilityType" class="form-control" value="{{ old('FacilityType', $facility->FacilityType) }}">
+        <div class="mb-3">
+            <label for="facility_type" class="form-label">Facility Type</label>
+            <select name="facility_type" id="facility_type" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Facility::FACILITY_TYPES as $type)
+                    <option value="{{ $type }}" @if($facility->facility_type == $type) selected @endif>{{ $type }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Capabilities">Capabilities</label>
-            <textarea name="Capabilities" id="Capabilities" class="form-control">{{ old('Capabilities', $facility->Capabilities) }}</textarea>
+        <div class="mb-3">
+            <label for="capabilities" class="form-label">Capabilities</label>
+            <textarea name="capabilities" id="capabilities" class="form-control">{{ $facility->capabilities }}</textarea>
         </div>
-        <br>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('facilities.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

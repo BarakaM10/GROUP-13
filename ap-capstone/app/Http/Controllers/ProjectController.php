@@ -6,98 +6,93 @@ use App\Models\Project;
 use App\Models\Program;
 use App\Models\Facility;
 use App\Models\Participant;
+use App\Models\ProjectParticipant;
 use Illuminate\Http\Request;
 
 class ProjectController
 {
-    public function index(Request $request)
+    public function index()
     {
-        $facilityId = $request->query('facility_id');
-        $programId = $request->query('program_id');
-
-        $projects = Project::when($facilityId, fn($q, $f) => $q->where('FacilityId', $f))
-            ->when($programId, fn($q, $p) => $q->where('ProgramId', $p))
-            ->with(['program', 'facility'])
-            ->paginate(10);
-
+        $projects = Project::all();
         return view('projects.index', compact('projects'));
-    }
-
-    public function show(Project $project)
-    {
-        return view('projects.show', compact('project'));
     }
 
     public function create()
     {
         $programs = Program::all();
         $facilities = Facility::all();
-        $participants = Participant::all();
-        return view('projects.create', compact('programs', 'facilities', 'participants'));
+        return view('projects.create', compact('programs', 'facilities'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'ProgramId' => 'required|exists:programs,ProgramId',
-            'FacilityId' => 'required|exists:facilities,FacilityId',
-            'Title' => 'required|string|max:255',
-            'NatureOfProject' => 'nullable|string',
-            'Description' => 'nullable|string',
-            'InnovationFocus' => 'nullable|string',
-            'PrototypeStage' => 'nullable|string',
-            'TestingRequirements' => 'nullable|string',
-            'CommercializationPlan' => 'nullable|string',
-            'participants' => 'array',
-            'participants.*' => 'exists:participants,ParticipantId',
+            'program_id' => 'required|exists:programs,id',
+            'facility_id' => 'required|exists:facilities,id',
+            'title' => 'required|string|max:255',
+            'nature_of_project' => 'nullable|in:' . implode(',', Project::NATURES),
+            'description' => 'nullable|string',
+            'innovation_focus' => 'nullable|string|max:255',
+            'prototype_stage' => 'nullable|in:' . implode(',', Project::PROTOTYPE_STAGES),
+            'testing_requirements' => 'nullable|string',
+            'commercialization_plan' => 'nullable|string',
         ]);
 
-        $project = Project::create($validated);
+        Project::create($validated);
 
-        if (isset($validated['participants'])) {
-            $project->participants()->attach($validated['participants']);
-        }
+        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
+    }
 
-        return redirect()->route('projects.index')->with('success', 'Project created.');
+    public function show(Project $project)
+    {
+        $project->load('participants.participant', 'outcomes');
+        $participants = Participant::all();
+        return view('projects.show', compact('project', 'participants'));
     }
 
     public function edit(Project $project)
     {
         $programs = Program::all();
         $facilities = Facility::all();
-        $participants = Participant::all();
-        return view('projects.edit', compact('project', 'programs', 'facilities', 'participants'));
+        return view('projects.edit', compact('project', 'programs', 'facilities'));
     }
 
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'ProgramId' => 'required|exists:programs,ProgramId',
-            'FacilityId' => 'required|exists:facilities,FacilityId',
-            'Title' => 'required|string|max:255',
-            'NatureOfProject' => 'nullable|string',
-            'Description' => 'nullable|string',
-            'InnovationFocus' => 'nullable|string',
-            'PrototypeStage' => 'nullable|string', 
-            'TestingRequirements' => 'nullable|string',
-            'CommercializationPlan' => 'nullable|string', 
-            'participants' => 'array',
-            'participants.*' => 'exists:participants,ParticipantId',
+            'program_id' => 'required|exists:programs,id',
+            'facility_id' => 'required|exists:facilities,id',
+            'title' => 'required|string|max:255',
+            'nature_of_project' => 'nullable|in:' . implode(',', Project::NATURES),
+            'description' => 'nullable|string',
+            'innovation_focus' => 'nullable|string|max:255',
+            'prototype_stage' => 'nullable|in:' . implode(',', Project::PROTOTYPE_STAGES),
+            'testing_requirements' => 'nullable|string',
+            'commercialization_plan' => 'nullable|string',
         ]);
 
         $project->update($validated);
-      
-        $project->participants()->sync($validated['participants'] ?? []);
 
-        return redirect()->route('projects.index')->with('success', 'Project updated.');
+        return redirect()->route('projects.show', $project)->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project)
     {
-        if ($project->outcomes()->exists() || $project->participants()->exists()) {
-            return back()->with('error', 'Cannot delete project with linked records.');
-        }
         $project->delete();
-        return redirect()->route('projects.index')->with('success', 'Project deleted.');
+
+        return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+    }
+
+    public function assignParticipant(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'participant_id' => 'required|exists:participants,id',
+            'role_on_project' => 'nullable|in:' . implode(',', ProjectParticipant::ROLES_ON_PROJECT),
+            'skill_role' => 'nullable|in:' . implode(',', ProjectParticipant::SKILL_ROLES),
+        ]);
+
+        $project->participants()->create($validated);
+
+        return redirect()->back()->with('success', 'Participant assigned successfully.');
     }
 }

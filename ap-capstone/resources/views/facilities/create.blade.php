@@ -1,42 +1,38 @@
 @extends('layouts.app')
 
-@section('title', 'Create Facility')
-
 @section('content')
     <h1>Create Facility</h1>
     <form action="{{ route('facilities.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" class="form-control" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Location">Location</label>
-            <input type="text" name="Location" id="Location" class="form-control">
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" name="location" id="location" class="form-control" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control"></textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="PartnerOrganization">Partner Organization</label>
-            <input type="text" name="PartnerOrganization" id="PartnerOrganization" class="form-control">
+        <div class="mb-3">
+            <label for="partner_organization" class="form-label">Partner Organization</label>
+            <input type="text" name="partner_organization" id="partner_organization" class="form-control">
         </div>
-        <br>
-        <div class="form-group">
-            <label for="FacilityType">Facility Type</label>
-            <input type="text" name="FacilityType" id="FacilityType" class="form-control">
+        <div class="mb-3">
+            <label for="facility_type" class="form-label">Facility Type</label>
+            <select name="facility_type" id="facility_type" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Facility::FACILITY_TYPES as $type)
+                    <option value="{{ $type }}">{{ $type }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Capabilities">Capabilities</label>
-            <textarea name="Capabilities" id="Capabilities" class="form-control"></textarea>
+        <div class="mb-3">
+            <label for="capabilities" class="form-label">Capabilities</label>
+            <textarea name="capabilities" id="capabilities" class="form-control"></textarea>
         </div>
-        <br>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a href="{{ route('facilities.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

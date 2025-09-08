@@ -9,23 +9,18 @@ class FacilityController
 {
     public function index(Request $request)
     {
-        $search = $request->query('search');
-        $type = $request->query('type');
-        $partner = $request->query('partner');
-        $capability = $request->query('capability');
-
-        $facilities = Facility::when($search, fn($q, $s) => $q->where('Name', 'like', "%{$s}%"))
-            ->when($type, fn($q, $t) => $q->where('FacilityType', $t))
-            ->when($partner, fn($q, $p) => $q->where('PartnerOrganization', $p))
-            ->when($capability, fn($q, $c) => $q->where('Capabilities', 'like', "%{$c}%"))
-            ->paginate(10);
-
+        $query = Facility::query();
+        if ($request->filled('facility_type')) {
+            $query->where('facility_type', $request->facility_type);
+        }
+        if ($request->filled('partner_organization')) {
+            $query->where('partner_organization', 'like', '%'.$request->partner_organization.'%');
+        }
+        if ($request->filled('capabilities')) {
+            $query->where('capabilities', 'like', '%'.$request->capabilities.'%');
+        }
+        $facilities = $query->get();
         return view('facilities.index', compact('facilities'));
-    }
-
-    public function show(Facility $facility)
-    {
-        return view('facilities.show', compact('facility'));
     }
 
     public function create()
@@ -36,15 +31,22 @@ class FacilityController
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
-            'Location' => 'nullable|string',
-            'Description' => 'nullable|string',
-            'PartnerOrganization' => 'nullable|string',
-            'FacilityType' => 'nullable|string',
-            'Capabilities' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'partner_organization' => 'nullable|string|max:255',
+            'facility_type' => 'nullable|in:' . implode(',', Facility::FACILITY_TYPES),
+            'capabilities' => 'nullable|string',
         ]);
+
         Facility::create($validated);
-        return redirect()->route('facilities.index')->with('success', 'Facility created.');
+
+        return redirect()->route('facilities.index')->with('success', 'Facility created successfully.');
+    }
+
+    public function show(Facility $facility)
+    {
+        return view('facilities.show', compact('facility'));
     }
 
     public function edit(Facility $facility)
@@ -55,23 +57,44 @@ class FacilityController
     public function update(Request $request, Facility $facility)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
-            'Location' => 'nullable|string',
-            'Description' => 'nullable|string',
-            'PartnerOrganization' => 'nullable|string',
-            'FacilityType' => 'nullable|string',
-            'Capabilities' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'partner_organization' => 'nullable|string|max:255',
+            'facility_type' => 'nullable|in:' . implode(',', Facility::FACILITY_TYPES),
+            'capabilities' => 'nullable|string',
         ]);
+
         $facility->update($validated);
-        return redirect()->route('facilities.index')->with('success', 'Facility updated.');
+
+        return redirect()->route('facilities.show', $facility)->with('success', 'Facility updated successfully.');
     }
 
     public function destroy(Facility $facility)
     {
-        if ($facility->projects()->exists() || $facility->services()->exists() || $facility->equipment()->exists()) {
+        if ($facility->projects()->count() > 0 || $facility->services()->count() > 0 || $facility->equipment()->count() > 0) {
             return back()->with('error', 'Cannot delete facility with linked records.');
         }
         $facility->delete();
-        return redirect()->route('facilities.index')->with('success', 'Facility deleted.');
+
+        return redirect()->route('facilities.index')->with('success', 'Facility deleted successfully.');
+    }
+
+    public function services(Facility $facility)
+    {
+        $services = $facility->services;
+        return view('facilities.services', compact('facility', 'services'));
+    }
+
+    public function equipment(Facility $facility)
+    {
+        $equipment = $facility->equipment;
+        return view('facilities.equipment', compact('facility', 'equipment'));
+    }
+
+    public function projects(Facility $facility)
+    {
+        $projects = $facility->projects;
+        return view('facilities.projects', compact('facility', 'projects'));
     }
 }

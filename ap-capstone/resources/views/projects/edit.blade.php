@@ -1,66 +1,66 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Project')
-
 @section('content')
     <h1>Edit Project</h1>
-    <form action="{{ route('projects.update', $project->ProjectId) }}" method="POST">
+    <form action="{{ route('projects.update', $project) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="Title">Title</label>
-            <input type="text" name="Title" id="Title" class="form-control" value="{{ old('Title', $project->Title) }}" required>
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="ProgramId">Program</label>
-            <select name="ProgramId" id="ProgramId" class="form-control" required>
-                @foreach($programs as $program)
-                    <option value="{{ $program->ProgramId }}" {{ $program->ProgramId == $project->ProgramId ? 'selected' : '' }}>{{ $program->Name }}</option>
+        <div class="mb-3">
+            <label for="program_id" class="form-label">Program</label>
+            <select name="program_id" id="program_id" class="form-control" required>
+                <option value="">Select Program</option>
+                @foreach ($programs as $program)
+                    <option value="{{ $program->id }}" @if($project->program_id == $program->id) selected @endif>{{ $program->name }}</option>
                 @endforeach
             </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="FacilityId">Facility</label>
-            <select name="FacilityId" id="FacilityId" class="form-control" required>
-                @foreach($facilities as $facility)
-                    <option value="{{ $facility->FacilityId }}" {{ $facility->FacilityId == $project->FacilityId ? 'selected' : '' }}>{{ $facility->Name }}</option>
+        <div class="mb-3">
+            <label for="facility_id" class="form-label">Facility</label>
+            <select name="facility_id" id="facility_id" class="form-control" required>
+                <option value="">Select Facility</option>
+                @foreach ($facilities as $facility)
+                    <option value="{{ $facility->id }}" @if($project->facility_id == $facility->id) selected @endif>{{ $facility->name }}</option>
                 @endforeach
             </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="NatureOfProject">Nature of Project</label>
-            <input type="text" name="NatureOfProject" id="NatureOfProject" class="form-control" value="{{ old('NatureOfProject', $project->NatureOfProject) }}">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ $project->title }}" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $project->Description) }}</textarea>
+        <div class="mb-3">
+            <label for="nature_of_project" class="form-label">Nature of Project</label>
+            <select name="nature_of_project" id="nature_of_project" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Project::NATURES as $nature)
+                    <option value="{{ $nature }}" @if($project->nature_of_project == $nature) selected @endif>{{ $nature }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="InnovationFocus">Innovation Focus</label>
-            <input type="text" name="InnovationFocus" id="InnovationFocus" class="form-control" value="{{ old('InnovationFocus', $project->InnovationFocus) }}">
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control">{{ $project->description }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="PrototypeStage">Prototype Stage</label>
-            <input type="text" name="PrototypeStage" id="PrototypeStage" class="form-control" value="{{ old('PrototypeStage', $project->PrototypeStage) }}">
+        <div class="mb-3">
+            <label for="innovation_focus" class="form-label">Innovation Focus</label>
+            <input type="text" name="innovation_focus" id="innovation_focus" class="form-control" value="{{ $project->innovation_focus }}">
         </div>
-        <br>
-        <div class="form-group">
-            <label for="TestingRequirements">Testing Requirements</label>
-            <input type="text" name="TestingRequirements" id="TestingRequirements" class="form-control" value="{{ old('TestingRequirements', $project->TestingRequirements) }}">
+        <div class="mb-3">
+            <label for="prototype_stage" class="form-label">Prototype Stage</label>
+            <select name="prototype_stage" id="prototype_stage" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Project::PROTOTYPE_STAGES as $stage)
+                    <option value="{{ $stage }}" @if($project->prototype_stage == $stage) selected @endif>{{ $stage }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="CommercializationPlan">Commercialization Plan</label>
-            <textarea name="CommercializationPlan" id="CommercializationPlan" class="form-control">{{ old('CommercializationPlan', $project->CommercializationPlan) }}</textarea>
+        <div class="mb-3">
+            <label for="testing_requirements" class="form-label">Testing Requirements</label>
+            <textarea name="testing_requirements" id="testing_requirements" class="form-control">{{ $project->testing_requirements }}</textarea>
         </div>
-        <br>
+        <div class="mb-3">
+            <label for="commercialization_plan" class="form-label">Commercialization Plan</label>
+            <textarea name="commercialization_plan" id="commercialization_plan" class="form-control">{{ $project->commercialization_plan }}</textarea>
+        </div>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('projects.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

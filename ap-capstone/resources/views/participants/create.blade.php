@@ -1,45 +1,51 @@
 @extends('layouts.app')
 
-@section('title', 'Create Participant')
-
 @section('content')
     <h1>Create Participant</h1>
     <form action="{{ route('participants.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="FullName">Full Name</label>
-            <input type="text" name="FullName" id="FullName" class="form-control" required>
+        <div class="mb-3">
+            <label for="full_name" class="form-label">Full Name</label>
+            <input type="text" name="full_name" id="full_name" class="form-control" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Email">Email</label>
-            <input type="email" name="Email" id="Email" class="form-control" required>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Affiliation">Affiliation</label>
-            <input type="text" name="Affiliation" id="Affiliation" class="form-control">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="Specialization">Specialization</label>
-            <input type="text" name="Specialization" id="Specialization" class="form-control">
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="CrossSkillTrained">Cross-Skill Trained</label>
-            <select name="CrossSkillTrained" id="CrossSkillTrained" class="form-control">
-                <option value="1">Yes</option>
-                <option value="0" selected>No</option>
+        <div class="mb-3">
+            <label for="affiliation" class="form-label">Affiliation</label>
+            <select name="affiliation" id="affiliation" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Participant::AFFILIATIONS as $aff)
+                    <option value="{{ $aff }}">{{ $aff }}</option>
+                @endforeach
             </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Institution">Institution</label>
-            <input type="text" name="Institution" id="Institution" class="form-control">
+        <div class="mb-3">
+            <label for="specialization" class="form-label">Specialization</label>
+            <select name="specialization" id="specialization" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Participant::SPECIALIZATIONS as $spec)
+                    <option value="{{ $spec }}">{{ $spec }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
+        <div class="mb-3">
+            <label for="cross_skill_trained" class="form-label">Cross Skill Trained</label>
+            <select name="cross_skill_trained" id="cross_skill_trained" class="form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="institution" class="form-label">Institution</label>
+            <select name="institution" id="institution" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Participant::INSTITUTIONS as $inst)
+                    <option value="{{ $inst }}">{{ $inst }}</option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Create</button>
-        <a href="{{ route('participants.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

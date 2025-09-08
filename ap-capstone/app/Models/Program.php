@@ -9,13 +9,12 @@ class Program extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ProgramId';
-    public $incrementing = true;
-
-    protected $fillable = ['Name', 'Description', 'NationalAlignment', 'FocusAreas', 'Phases'];
+    protected $fillable = [
+        'name', 'description', 'national_alignment', 'focus_areas', 'phases',
+    ];
 
     public function projects()
     {
-        return $this->hasMany(Project::class, 'ProgramId', 'ProgramId');
+        return $this->hasMany(Project::class);
     }
 }

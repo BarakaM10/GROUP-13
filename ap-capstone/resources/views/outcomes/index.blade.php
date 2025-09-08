@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Outcomes')
-
 @section('content')
     <h1>Outcomes</h1>
     <a href="{{ route('outcomes.create') }}" class="btn btn-primary mb-3">Create Outcome</a>
@@ -10,23 +8,27 @@
             <tr>
                 <th>ID</th>
                 <th>Title</th>
+                <th>Type</th>
+                <th>Commercialization Status</th>
                 <th>Project</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($outcomes as $outcome)
+            @foreach ($outcomes as $outcome)
                 <tr>
-                    <td>{{ $outcome->OutcomeId }}</td>
-                    <td>{{ $outcome->Title }}</td>
-                    <td>{{ $outcome->project->Title ?? 'None' }}</td>
+                    <td>{{ $outcome->id }}</td>
+                    <td>{{ $outcome->title }}</td>
+                    <td>{{ $outcome->outcome_type }}</td>
+                    <td>{{ $outcome->commercialization_status }}</td>
+                    <td>{{ $outcome->project->title }}</td>
                     <td>
-                        <a href="{{ route('outcomes.show', $outcome->OutcomeId) }}" class="btn btn-sm btn-success">View</a>
-                        <a href="{{ route('outcomes.edit', $outcome->OutcomeId) }}" class="btn btn-sm btn-info">Edit</a>
-                        <form action="{{ route('outcomes.destroy', $outcome->OutcomeId) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('outcomes.show', $outcome) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('outcomes.edit', $outcome) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="{{ route('outcomes.destroy', $outcome) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>

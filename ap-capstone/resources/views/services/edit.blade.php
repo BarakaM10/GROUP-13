@@ -1,42 +1,45 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Service')
-
 @section('content')
     <h1>Edit Service</h1>
-    <form action="{{ route('services.update', $service->ServiceId) }}" method="POST">
+    <form action="{{ route('services.update', $service) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="form-group">
-            <label for="Name">Name</label>
-            <input type="text" name="Name" id="Name" class="form-control" value="{{ old('Name', $service->Name) }}" required>
-        </div>
-        <br>
-        <div class="form-group">
-            <label for="FacilityId">Facility</label>
-            <select name="FacilityId" id="FacilityId" class="form-control" required>
-                @foreach($facilities as $facility)
-                    <option value="{{ $facility->FacilityId }}" {{ $facility->FacilityId == $service->FacilityId ? 'selected' : '' }}>{{ $facility->Name }}</option>
+        <div class="mb-3">
+            <label for="facility_id" class="form-label">Facility</label>
+            <select name="facility_id" id="facility_id" class="form-control" required>
+                <option value="">Select Facility</option>
+                @foreach ($facilities as $facility)
+                    <option value="{{ $facility->id }}" @if($service->facility_id == $facility->id) selected @endif>{{ $facility->name }}</option>
                 @endforeach
             </select>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Description">Description</label>
-            <textarea name="Description" id="Description" class="form-control">{{ old('Description', $service->Description) }}</textarea>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ $service->name }}" required>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="Category">Category</label>
-            <input type="text" name="Category" id="Category" class="form-control" value="{{ old('Category', $service->Category) }}">
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control">{{ $service->description }}</textarea>
         </div>
-        <br>
-        <div class="form-group">
-            <label for="SkillType">Skill Type</label>
-            <input type="text" name="SkillType" id="SkillType" class="form-control" value="{{ old('SkillType', $service->SkillType) }}">
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select name="category" id="category" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Service::CATEGORIES as $category)
+                    <option value="{{ $category }}" @if($service->category == $category) selected @endif>{{ $category }}</option>
+                @endforeach
+            </select>
         </div>
-        <br>
+        <div class="mb-3">
+            <label for="skill_type" class="form-label">Skill Type</label>
+            <select name="skill_type" id="skill_type" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Service::SKILL_TYPES as $type)
+                    <option value="{{ $type }}" @if($service->skill_type == $type) selected @endif>{{ $type }}</option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('services.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

@@ -1,20 +1,16 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
 use Illuminate\Http\Request;
 
-class ParticipantController
+class ParticipantController 
 {
     public function index()
     {
-        $participants = Participant::paginate(10);
+        $participants = Participant::all();
         return view('participants.index', compact('participants'));
-    }
-
-    public function show(Participant $participant)
-    {
-        return view('participants.show', compact('participant'));
     }
 
     public function create()
@@ -25,15 +21,22 @@ class ParticipantController
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'FullName' => 'required|string|max:255',
-            'Email' => 'required|email|unique:participants',
-            'Affiliation' => 'nullable|string',
-            'Specialization' => 'nullable|string',
-             'CrossSkillTrained' => 'boolean',
-            'Institution' => 'nullable|string',
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:participants,email',
+            'affiliation' => 'nullable|in:' . implode(',', Participant::AFFILIATIONS),
+            'specialization' => 'nullable|in:' . implode(',', Participant::SPECIALIZATIONS),
+            'cross_skill_trained' => 'boolean',
+            'institution' => 'nullable|in:' . implode(',', Participant::INSTITUTIONS),
         ]);
+
         Participant::create($validated);
-        return redirect()->route('participants.index')->with('success', 'Participant created.');
+
+        return redirect()->route('participants.index')->with('success', 'Participant created successfully.');
+    }
+
+    public function show(Participant $participant)
+    {
+        return view('participants.show', compact('participant'));
     }
 
     public function edit(Participant $participant)
@@ -44,22 +47,29 @@ class ParticipantController
     public function update(Request $request, Participant $participant)
     {
         $validated = $request->validate([
-            'FullName' => 'required|string|max:255',
-            'Email' => 'required|email|unique:participants,Email,' . $participant->ParticipantId . ',ParticipantId',
-            'Affiliation' => 'nullable|string',
-            'Specialization' => 'nullable|string',
-            'CrossSkillTrained' => 'boolean',
-            'Institution' => 'nullable|string',
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:participants,email,' . $participant->id,
+            'affiliation' => 'nullable|in:' . implode(',', Participant::AFFILIATIONS),
+            'specialization' => 'nullable|in:' . implode(',', Participant::SPECIALIZATIONS),
+            'cross_skill_trained' => 'boolean',
+            'institution' => 'nullable|in:' . implode(',', Participant::INSTITUTIONS),
         ]);
+
         $participant->update($validated);
-        return redirect()->route('participants.index')->with('success', 'Participant updated.');
+
+        return redirect()->route('participants.show', $participant)->with('success', 'Participant updated successfully.');
     }
-public function destroy(Participant $participant)
+
+    public function destroy(Participant $participant)
     {
-        if ($participant->projects()->exists()) {
-            return back()->with('error', 'Cannot delete participant with linked projects.');
-        }
         $participant->delete();
-        return redirect()->route('participants.index')->with('success', 'Participant deleted.');
+
+        return redirect()->route('participants.index')->with('success', 'Participant deleted successfully.');
     }
-};
+
+    public function projects(Participant $participant)
+    {
+        $projects = $participant->projects;
+        return view('participants.projects', compact('participant', 'projects'));
+    }
+}
