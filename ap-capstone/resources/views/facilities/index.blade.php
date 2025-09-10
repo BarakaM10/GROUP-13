@@ -1,54 +1,55 @@
 @extends('layouts.app')
 
-@section('title', 'Facilities')
-
 @section('content')
     <h1>Facilities</h1>
-    <a href="{{ route('facilities.create') }}" class="btn btn-primary">Create Facility</a>
-    <!-- Search/Filter form example -->
-    <form method="GET" class="mt-3">
+    <form method="GET" class="mb-3">
         <div class="row">
-            <div class="col">
-                <input type="text" name="search" class="form-control" placeholder="Search by name" value="{{ request('search') }}">
+            <div class="col-md-4">
+                <select name="facility_type" class="form-control">
+                    <option value="">Filter by Type</option>
+                    @foreach (App\Models\Facility::FACILITY_TYPES as $type)
+                        <option value="{{ $type }}" @if(request('facility_type') == $type) selected @endif>{{ $type }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col">
-                <input type="text" name="type" class="form-control" placeholder="Filter by type" value="{{ request('type') }}">
+            <div class="col-md-4">
+                <input type="text" name="partner_organization" placeholder="Filter by Partner" class="form-control" value="{{ request('partner_organization') }}">
             </div>
-            <div class="col">
-                <input type="text" name="partner" class="form-control" placeholder="Filter by partner" value="{{ request('partner') }}">
-            </div>
-            <div class="col">
-                <input type="text" name="capability" class="form-control" placeholder="Filter by capability" value="{{ request('capability') }}">
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Filter</button>
+            <div class="col-md-4">
+                <input type="text" name="capabilities" placeholder="Filter by Capabilities" class="form-control" value="{{ request('capabilities') }}">
             </div>
         </div>
+        <button type="submit" class="btn btn-primary mt-2">Filter</button>
     </form>
-    <table class="table mt-3">
+    <a href="{{ route('facilities.create') }}" class="btn btn-primary mb-3">Create Facility</a>
+    <table class="table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
+                <th>Location</th>
                 <th>Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($facilities as $facility)
+            @foreach ($facilities as $facility)
                 <tr>
-                    <td>{{ $facility->Name }}</td>
-                    <td>{{ $facility->FacilityType }}</td>
+                    <td>{{ $facility->id }}</td>
+                    <td>{{ $facility->name }}</td>
+                    <td>{{ $facility->location }}</td>
+                    <td>{{ $facility->facility_type }}</td>
                     <td>
-                        <a href="{{ route('facilities.show', $facility) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('facilities.edit', $facility) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('facilities.destroy', $facility) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        <a href="{{ route('facilities.show', $facility) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('facilities.edit', $facility) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="{{ route('facilities.destroy', $facility) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    {{ $facilities->links() }}
 @endsection

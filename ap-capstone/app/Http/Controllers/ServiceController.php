@@ -6,24 +6,16 @@ use App\Models\Service;
 use App\Models\Facility;
 use Illuminate\Http\Request;
 
-class ServiceController extends Controller
+class ServiceController
 {
     public function index(Request $request)
     {
-        $facilityId = $request->query('facility_id');
-        $category = $request->query('category');
-
-        $services = Service::when($facilityId, fn($q, $f) => $q->where('FacilityId', $f))
-            ->when($category, fn($q, $c) => $q->where('Category', 'like', "%{$c}%"))
-            ->with('facility')
-            ->paginate(10);
-
+        $query = Service::query();
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+        $services = $query->get();
         return view('services.index', compact('services'));
-    }
-
-    public function show(Service $service)
-    {
-        return view('services.show', compact('service'));
     }
 
     public function create()
@@ -32,17 +24,24 @@ class ServiceController extends Controller
         return view('services.create', compact('facilities'));
     }
 
-        public function store(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'FacilityId' => 'required|exists:facilities,FacilityId',
-            'Name' => 'required|string|max:255',
-            'Description' => 'nullable|text',
-            'Category' => 'nullable|string',
-            'SkillType' => 'nullable|string',
+            'facility_id' => 'required|exists:facilities,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'nullable|in:' . implode(',', Service::CATEGORIES),
+            'skill_type' => 'nullable|in:' . implode(',', Service::SKILL_TYPES),
         ]);
+
         Service::create($validated);
-        return redirect()->route('services.index')->with('success', 'Service created.');
+
+        return redirect()->route('services.index')->with('success', 'Service created successfully.');
+    }
+
+    public function show(Service $service)
+    {
+        return view('services.show', compact('service'));
     }
 
     public function edit(Service $service)
@@ -54,19 +53,22 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $validated = $request->validate([
-            'FacilityId' => 'required|exists:facilities,FacilityId',
-            'Name' => 'required|string|max:255',
-            'Description' => 'nullable|text',
-            'Category' => 'nullable|string',
-            'SkillType' => 'nullable|string',
+            'facility_id' => 'required|exists:facilities,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'nullable|in:' . implode(',', Service::CATEGORIES),
+            'skill_type' => 'nullable|in:' . implode(',', Service::SKILL_TYPES),
         ]);
+
         $service->update($validated);
-        return redirect()->route('services.index')->with('success', 'Service updated.');
+
+        return redirect()->route('services.show', $service)->with('success', 'Service updated successfully.');
     }
 
-     public function destroy(Service $service)
+    public function destroy(Service $service)
     {
         $service->delete();
-        return redirect()->route('services.index')->with('success', 'Service deleted.');
+
+        return redirect()->route('services.index')->with('success', 'Service deleted successfully.');
     }
-};
+}

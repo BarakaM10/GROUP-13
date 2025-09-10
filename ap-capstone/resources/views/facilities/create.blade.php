@@ -1,35 +1,38 @@
 @extends('layouts.app')
 
-@section('title', 'Create Facility')
-
 @section('content')
     <h1>Create Facility</h1>
     <form action="{{ route('facilities.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label>Name</label>
-            <input type="text" name="Name" class="form-control" required>
+            <label for="name" class="form-label">Name</label>
+            <input type="text" name="name" id="name" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>Location</label>
-            <input type="text" name="Location" class="form-control">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" name="location" id="location" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>Description</label>
-            <textarea name="Description" class="form-control"></textarea>
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
         </div>
         <div class="mb-3">
-            <label>Partner Organization</label>
-            <input type="text" name="PartnerOrganization" class="form-control">
+            <label for="partner_organization" class="form-label">Partner Organization</label>
+            <input type="text" name="partner_organization" id="partner_organization" class="form-control">
         </div>
         <div class="mb-3">
-            <label>Facility Type</label>
-            <input type="text" name="FacilityType" class="form-control">
+            <label for="facility_type" class="form-label">Facility Type</label>
+            <select name="facility_type" id="facility_type" class="form-control">
+                <option value="">Select</option>
+                @foreach (App\Models\Facility::FACILITY_TYPES as $type)
+                    <option value="{{ $type }}">{{ $type }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="mb-3">
-            <label>Capabilities</label>
-            <input type="text" name="Capabilities" class="form-control">
+            <label for="capabilities" class="form-label">Capabilities</label>
+            <textarea name="capabilities" id="capabilities" class="form-control"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Create</button>
     </form>
 @endsection

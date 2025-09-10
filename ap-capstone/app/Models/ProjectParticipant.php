@@ -11,5 +11,20 @@ class ProjectParticipant extends Model
 
     protected $table = 'project_participants';
 
-    protected $fillable = ['ProjectId', 'ParticipantId', 'RoleOnProject', 'SkillRole'];
+    const ROLES_ON_PROJECT = ['Student', 'Lecturer', 'Contributor'];
+    const SKILL_ROLES = ['Developer', 'Engineer', 'Designer', 'Business Lead'];
+
+    protected $fillable = [
+        'project_id', 'participant_id', 'role_on_project', 'skill_role',
+    ];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function participant()
+    {
+        return $this->belongsTo(Participant::class);
+    }
 }

@@ -9,14 +9,15 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ServiceId';
-    public $incrementing = true;
+    const CATEGORIES = ['Machining', 'Testing', 'Training'];
+    const SKILL_TYPES = ['Hardware', 'Software', 'Integration'];
 
-    protected $fillable = ['FacilityId', 'Name', 'Description', 'Category', 'SkillType'];
+    protected $fillable = [
+        'facility_id', 'name', 'description', 'category', 'skill_type',
+    ];
 
     public function facility()
     {
-        return $this->belongsTo(Facility::class, 'FacilityId', 'FacilityId');
+        return $this->belongsTo(Facility::class);
     }
-};
-
+}

@@ -9,15 +9,16 @@ class Participant extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'ParticipantId';
-    public $incrementing = true;
+    const AFFILIATIONS = ['CS', 'SE', 'Engineering', 'Other'];
+    const SPECIALIZATIONS = ['Software', 'Hardware', 'Business'];
+    const INSTITUTIONS = ['SCIT', 'CEDAT', 'UniPod', 'UIRI', 'Lwera'];
 
-    protected $fillable = ['FullName', 'Email', 'Affiliation', 'Specialization', 'CrossSkillTrained', 'Institution'];
+    protected $fillable = [
+        'full_name', 'email', 'affiliation', 'specialization', 'cross_skill_trained', 'institution',
+    ];
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_participants', 'ParticipantId', 'ProjectId')
-            ->withPivot('RoleOnProject', 'SkillRole');
+        return $this->hasMany(ProjectParticipant::class);
     }
-};
-
+}

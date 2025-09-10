@@ -9,16 +9,15 @@ class Outcome extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'OutcomeId';
-    public $incrementing = true;
+    const OUTCOME_TYPES = ['CAD', 'PCB', 'Prototype', 'Report', 'Business Plan'];
+    const COMMERCIALIZATION_STATUSES = ['Demoed', 'Market Linked', 'Launched'];
 
     protected $fillable = [
-        'ProjectId', 'Title', 'Description', 'ArtifactLink',
-        'OutcomeType', 'QualityCertification', 'CommercializationStatus'
+        'project_id', 'title', 'description', 'artifact_link', 'outcome_type', 'quality_certification', 'commercialization_status',
     ];
 
     public function project()
     {
-        return $this->belongsTo(Project::class, 'ProjectId', 'ProjectId');
+        return $this->belongsTo(Project::class);
     }
-};
+}

@@ -1,56 +1,47 @@
 @extends('layouts.app')
 
-@section('title', 'Services')
-
 @section('content')
     <h1>Services</h1>
-    <a href="{{ route('services.create') }}" class="btn btn-primary">Create Service</a>
-    <form method="GET" class="mt-3">
-        <div class="row">
-            <div class="col">
-                <select name="facility_id" class="form-control">
-                    <option value="">All Facilities</option>
-                    @foreach(\App\Models\Facility::all() as $facility)
-                        <option value="{{ $facility->FacilityId }}" {{ request('facility_id') == $facility->FacilityId ? 'selected' : '' }}>
-                            {{ $facility->Name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col">
-                <input type="text" name="category" class="form-control" placeholder="Filter by category" value="{{ request('category') }}">
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Filter</button>
-            </div>
-        </div>
+    <form method="GET" class="mb-3">
+        <select name="category" class="form-control d-inline-block w-auto">
+            <option value="">Filter by Category</option>
+            @foreach (App\Models\Service::CATEGORIES as $category)
+                <option value="{{ $category }}" @if(request('category') == $category) selected @endif>{{ $category }}</option>
+            @endforeach
+        </select>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
-    <table class="table mt-3">
+    <a href="{{ route('services.create') }}" class="btn btn-primary mb-3">Create Service</a>
+    <table class="table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
-               <th>Facility</th>
                 <th>Category</th>
+                <th>Skill Type</th>
+                <th>Facility</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($services as $service)
+            @foreach ($services as $service)
                 <tr>
-                    <td>{{ $service->Name }}</td>
-                    <td>{{ $service->facility->Name }}</td>
-                    <td>{{ $service->Category }}</td>
+                    <td>{{ $service->id }}</td>
+                    <td>{{ $service->name }}</td>
+                    <td>{{ $service->category }}</td>
+                    <td>{{ $service->skill_type }}</td>
+                    <td>{{ $service->facility->name }}</td>
                     <td>
-                        <a href="{{ route('services.show', $service) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('services.edit', $service) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('services.destroy', $service) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        <a href="{{ route('services.show', $service) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('services.edit', $service) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="{{ route('services.destroy', $service) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    {{ $services->links() }}
 @endsection

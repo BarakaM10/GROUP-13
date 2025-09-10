@@ -1,61 +1,54 @@
 @extends('layouts.app')
 
-@section('title', 'Equipment')
-
 @section('content')
     <h1>Equipment</h1>
-    <a href="{{ route('equipment.create') }}" class="btn btn-primary">Create Equipment</a>
-    <form method="GET" class="mt-3">
+    <form method="GET" class="mb-3">
         <div class="row">
-            <div class="col">
-                <select name="facility_id" class="form-control">
-                    <option value="">All Facilities</option>
-                    @foreach(\App\Models\Facility::all() as $facility)
-                        <option value="{{ $facility->FacilityId }}" {{ request('facility_id') == $facility->FacilityId ? 'selected' : '' }}>
-                            {{ $facility->Name }}
-                        </option>
+            <div class="col-md-6">
+                <input type="text" name="capabilities" placeholder="Filter by Capabilities" class="form-control" value="{{ request('capabilities') }}">
+            </div>
+            <div class="col-md-6">
+                <select name="usage_domain" class="form-control">
+                    <option value="">Filter by Usage Domain</option>
+                    @foreach (App\Models\Equipment::USAGE_DOMAINS as $domain)
+                        <option value="{{ $domain }}" @if(request('usage_domain') == $domain) selected @endif>{{ $domain }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="col">
-                <input type="text" name="capability" class="form-control" placeholder="Filter by capability" value="{{ request('capability') }}">
-            </div>
-            <div class="col">
-                <input type="text" name="domain" class="form-control" placeholder="Filter by usage domain" value="{{ request('domain') }}">
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-primary">Filter</button>
-            </div>
         </div>
+        <button type="submit" class="btn btn-primary mt-2">Filter</button>
     </form>
-    <table class="table mt-3">
+    <a href="{{ route('equipment.create') }}" class="btn btn-primary mb-3">Create Equipment</a>
+    <table class="table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
-                <th>Facility</th>
                 <th>Usage Domain</th>
                 <th>Support Phase</th>
+                <th>Facility</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($equipment as $item)
+            @foreach ($equipment as $equip)
                 <tr>
-                    <td>{{ $item->Name }}</td>
-                    <td>{{ $item->facility->Name }}</td>
-                    <td>{{ $item->UsageDomain }}</td>
-                    <td>{{ $item->SupportPhase }}</td>
+                    <td>{{ $equip->id }}</td>
+                    <td>{{ $equip->name }}</td>
+                    <td>{{ $equip->usage_domain }}</td>
+                    <td>{{ $equip->support_phase }}</td>
+                    <td>{{ $equip->facility->name }}</td>
                     <td>
-                        <a href="{{ route('equipment.show', $item) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('equipment.edit', $item) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('equipment.destroy', $item) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        <a href="{{ route('equipment.show', $equip) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('equipment.edit', $equip) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <form action="{{ route('equipment.destroy', $equip) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    {{ $equipment->links() }}
 @endsection
